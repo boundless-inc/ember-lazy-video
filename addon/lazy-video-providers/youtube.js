@@ -1,8 +1,4 @@
-import Ember from 'ember';
-
-const {
-  RSVP
-} = Ember;
+import { resolve } from 'rsvp';
 
 export default {
   apiUrl(videoId) {
@@ -12,6 +8,6 @@ export default {
     return `//www.youtube.com/embed/${videoId}`;
   },
   thumbnailUrl(videoId) {
-    return RSVP.resolve(`//img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+    return resolve(`//img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
   }
 };

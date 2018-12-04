@@ -1,13 +1,10 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { computed, get, set } from '@ember/object';
+import { htmlSafe } from '@ember/string';
+import { Component } from '@ember/component';
 
 const {
   on,
-  get,
-  inject,
-  set,
-  Component,
-  computed,
-  String
 } = Ember;
 
 export default Component.extend({
@@ -18,7 +15,7 @@ export default Component.extend({
   attributeBindings: ['style'],
   videoThumbnail: null,
   poster: null,
-  providers: inject.service('lazy-video-providers'),
+  providers: service('lazy-video-providers'),
 
   click() {
     set(this, 'isDisplayed', true);
@@ -31,7 +28,8 @@ export default Component.extend({
     return providers.getUrl(url, 'embedUrl', { autoplay: 1 });
   }),
 
-  _getVideoThumbnail: on('didInsertElement', function() {
+  didInsertElement() {
+    this._super(...arguments);
     let providers = get(this, 'providers');
     let url       = get(this, 'url');
     let poster    = get(this, 'poster');
@@ -43,11 +41,11 @@ export default Component.extend({
     providers.getThumbnailUrl(url).then((res) => {
       set(this, 'videoThumbnail', res);
     });
-  }),
+  },
 
   style: computed('videoThumbnail', 'poster', function() {
     let poster = get(this, 'poster');
     let thumbnail = poster || get(this, 'videoThumbnail');
-    return String.htmlSafe(`background-image: url(${encodeURI(thumbnail)})`);
+    return htmlSafe(`background-image: url(${encodeURI(thumbnail)})`);
   })
 });

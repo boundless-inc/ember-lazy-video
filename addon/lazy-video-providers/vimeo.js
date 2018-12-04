@@ -1,9 +1,4 @@
-import Ember from 'ember';
-
-const {
-  RSVP,
-  $
-} = Ember;
+import { promise } from 'rsvp';
 
 export default {
   apiUrl(videoId) {
@@ -14,7 +9,7 @@ export default {
   },
   thumbnailUrl(videoId) {
     let apiUrl = this.apiUrl(videoId);
-    return new RSVP.Promise((resolve) => {
+    return new promise((resolve) => {
       $.getJSON(apiUrl).then((res) => {
         resolve(res.thumbnail_url);
       });

@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import Service from '@ember/service';
+import { assert } from '@ember/debug';
+
 import youtube from 'ember-lazy-video/lazy-video-providers/youtube';
 import vimeo from 'ember-lazy-video/lazy-video-providers/vimeo';
 import instagram from 'ember-lazy-video/lazy-video-providers/instagram';
@@ -7,18 +9,10 @@ const YOUTUBE_REGEX = /(https?:\/\/)?(www.)?(youtube\.com\/watch\?v=|youtu\.be\/
 const VIMEO_REGEX   = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/;
 const INSTAGRAM_REGEX = /(https?:\/\/)?(www.)?instagr(am\.com|\.am)\/p\/([A-Za-z0-9_-]*)/;
 
-const {
-  Service,
-  $,
-  assert
-} = Ember;
-
 export default Service.extend({
   getUrl(url, endpoint, opts) {
-    let params;
     opts = (typeof opts === 'undefined') ? {} : opts;
-    params = $.param(opts);
-
+    let params = Object.keys(opts).map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(opts[k]));
     let provider = this._getProvider(url)[endpoint];
     let videoId = this._getVideoId(url);
 
